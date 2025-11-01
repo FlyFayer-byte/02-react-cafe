@@ -1,18 +1,42 @@
-// import { useState } from 'react'
-// import reactLogo from './assets/react.svg'
-// import viteLogo from '/vite.svg'
-import appCss from "./App.module.css"
-import cafeInfoCss from "./components/CafeInfo/CafeInfo.module.css"
+import { useState } from 'react';
+import { Votes, VoteType } from './types/votes';
+
+import CafeInfo from './components/CafeInfo/CafeInfo';
+import VoteOptions from './components/VoteOptions/VoteOptions';
+import VoteStats from './components/VoteStats/VoteStats';
+
+import css from './App.module.css';
 
 export default function App() {
+  // Стан для голосів
+  const [votes, setVotes] = useState<Votes>({
+    good: 0,
+    neutral: 0,
+    bad: 0,
+  });
+
+  // Функція для оновлення голосів
+  const handleVote = (type: VoteType) => {
+    setVotes(prev => ({
+      ...prev,
+      [type]: prev[type] + 1,
+    }));
+  };
+
+  // Скидання голосів
+  const resetVotes = () => {
+    setVotes({
+      good: 0,
+      neutral: 0,
+      bad: 0,
+    });
+  };
+
   return (
-    <div className={appCss.app}>
-      <div className={cafeInfoCss.container}>
-        <h1 className={cafeInfoCss.title}>Sip Happens Café</h1>
-        <p className={cafeInfoCss.description}>
-          Please rate our service by selecting one of the options below.
-        </p>
-      </div>
+    <div className={css.app}>
+      <CafeInfo />
+      <VoteOptions onVote={handleVote} onReset={resetVotes} />
+      <VoteStats votes={votes} />
     </div>
-  )
+  );
 }
