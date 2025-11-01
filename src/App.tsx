@@ -4,6 +4,7 @@ import type { Votes, VoteType } from './types/votes';
 import CafeInfo from './components/CafeInfo/CafeInfo';
 import VoteOptions from './components/VoteOptions/VoteOptions';
 import VoteStats from './components/VoteStats/VoteStats';
+import Notification from './components/Notification/Notification';
 
 import css from './App.module.css';
 
@@ -15,7 +16,8 @@ export default function App() {
     bad: 0,
   });
 
-  // Функція для оновлення голосів
+  // Функціі для роботи зі станом
+  // для оновлення стану голосів
   const handleVote = (type: VoteType) => {
     setVotes(prev => ({
       ...prev,
@@ -32,11 +34,26 @@ export default function App() {
     });
   };
 
+  const totalVotes = votes.good + votes.neutral + votes.bad;
+  const positive = totalVotes ? Math.round((votes.good / totalVotes) * 100) : 0;
+
   return (
     <div className={css.app}>
       <CafeInfo />
-      <VoteOptions onVote={handleVote} onReset={resetVotes} />
-      <VoteStats votes={votes} />
+      <VoteOptions
+        onVote={handleVote}
+        onReset={resetVotes}
+        canReset={totalVotes > 0}
+      />
+      {totalVotes > 0 ? (
+        <VoteStats
+          votes={votes}
+          totalVotes={totalVotes}
+          positiveRate={positive}
+        />
+      ) : (
+        <Notification />
+      )}
     </div>
   );
 }
