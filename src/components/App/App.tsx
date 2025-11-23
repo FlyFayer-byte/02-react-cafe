@@ -35,7 +35,9 @@ export default function App() {
   };
 
   const totalVotes = votes.good + votes.neutral + votes.bad;
-  const positive = totalVotes ? Math.round((votes.good / totalVotes) * 100) : 0;
+  const positive = totalVotes
+    ? Math.round((votes.good / totalVotes) * 100)
+    : 0;
 
   return (
     <div className={css.app}>
@@ -43,8 +45,17 @@ export default function App() {
       <VoteOptions
         onVote={handleVote}
         onReset={resetVotes}
+        // Зробіть так, щоб кнопка Reset відображалась тільки тоді, 
+        // коли є хоча б один голос. Для цього використовуйте змінну totalVotes 
+        // в компоненті App і передавайте пропс canReset в компонент VoteOptions 
+        // зі значенням, яке буде вказувати, чи потрібно відображати кнопку Reset.
         canReset={totalVotes > 0}
       />
+      {/* Реалізуйте умовний рендеринг компонентів залежно від значення totalVotes.
+      Компонент VoteStats має рендеритись тільки після того, як буде отримано
+      хоча б один голос. Тому, якщо значення totalVotes більше нуля, то має
+      рендеритись компонент VoteStats. Якщо ж відгуків немає (тобто totalVotes
+      дорівнює 0), то має рендеритись компонент Notification. */}
       {totalVotes > 0 ? (
         <VoteStats
           votes={votes}
